@@ -1,0 +1,51 @@
+{
+    "2076103": {
+        "descriptions": [
+            ""
+        ],
+        "name": "driving",
+        "type": "SKILL"
+    },
+    "2076106": {
+        "descriptions": [
+            ""
+        ],
+        "name": "per_training",
+        "type": "PHYSICAL_RECREATION"
+    },
+    "2109937": {
+        "descriptions": [
+            ""
+        ],
+        "name": "mentoring",
+        "type": "SERVICE"
+    },
+    "2282972": {
+        "descriptions": [
+            ""
+        ],
+        "name": "lead_youth_club",
+        "type": "SERVICE"
+    },
+    "2283029": {
+        "descriptions": [
+            ""
+        ],
+        "name": "mandarin",
+        "type": "SKILL"
+    },
+    "2504980": {
+        "descriptions": [
+            ""
+        ],
+        "name": "driving",
+        "type": "SKILL"
+    },
+    "2504983": {
+        "descriptions": [
+            ""
+        ],
+        "name": "dev_vol_fir_aid",
+        "type": "SERVICE"
+    }
+}
