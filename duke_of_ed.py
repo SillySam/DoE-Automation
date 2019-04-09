@@ -28,6 +28,7 @@ class DOE:
     def get_activities(self):
         ''' Get all users's activities (minified responce)'''
         url  = 'https://www.onlinerecordbook.org/api/v1/awards?sort=-id&with=ADVENTUROUS_JOURNEYS,AJ_PREP_TRAINING,RESIDENTIAL_PROJECT,ACTIVITIES,ACTIVITIES_WITH_PROGRESS,AWARD_LEVEL,LEADER,PARTICIPANT_REGISTRATION_ASSESSMENT_STATE,PAYMENT_INFO&firstRow=0&maxRows=0&getTotalRowCount=false&userType=participant&locale=en-gb&timeZone=Pacific/Auckland&c=f'
+        # TODO: Add checking if activities are already completed (will need to feed another variable into the returned dictonary)
         return json.loads(self.session.get(url).text)[0]['activities']
 
     def add_activity(self, activity_id, description, date, time=3600):
@@ -64,8 +65,8 @@ def fill_activities():
         added = 0
         for id, value in loaded_json.items():
             description = value['descriptions'][0]
-            print('[+] Adding {} {}: {}'.format(value['name'], value['type'], description[0]))
             if description != '':
+                print('[+] Adding {} {}: "{}"'.format(value['name'], value['type'], description[:100]))
                 doe.add_activity(id, description, date)
                 del value['descriptions'][0]
                 added += 1
@@ -77,7 +78,7 @@ def fill_activities():
 
         # Save new json
         f = open('tasks.json', 'w')
-        f.write(loaded_json)
+        f.write(json.dumps(loaded_json, indent=4, sort_keys=True))
         f.close()
 
 def create_tasksheet(doe):
@@ -98,7 +99,9 @@ def create_tasksheet(doe):
     f.close()
 
 if __name__ == "__main__":
-    schedule.every().wednesday.do(fill_activities)
+
+    schedule.every().day.do(fill_activities)
     while True:
         schedule.run_pending()
         sleep(10)
+
