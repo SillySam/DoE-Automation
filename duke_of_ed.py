@@ -1,10 +1,11 @@
 import requests
 import config
 import json
-import datetime
-import schedule
-from time import sleep
 import os
+
+import datetime
+import calendar
+import schedule
 
 class DOE:
     def __init__(self):
@@ -31,7 +32,7 @@ class DOE:
         # TODO: Add checking if activities are already completed (will need to feed another variable into the returned dictonary)
         return json.loads(self.session.get(url).text)[0]['activities']
 
-    def add_activity(self, activity_id, description, date, time=3600):
+    def add_activity(self, activity_id, description, date=datetime.datetime.now().strftime("%Y-%m-%dT00:00:00"), time=3600):
         ''' Add log to an activity '''
         url  = 'https://www.onlinerecordbook.org/api/v1/activity-logs?userType=participant&locale=en-gb&timeZone=Pacific/Auckland&c=f'
         data = {
@@ -42,66 +43,26 @@ class DOE:
         }
         self.session.post(url, json=data)
 
-def fill_activities():
-    ''' Enter information into the dashboard '''
-    print('[+] Logging in!')
-    doe  = DOE()
-    if doe.login(config.EMAIL, config.PASSWORD):
-        date = datetime.datetime.now().strftime("%Y-%m-%dT00:00:00")
-
-        # Generate tasksheet if not found
-        if not os.path.isfile('tasks.json'):
-            create_tasksheet(doe)
-            print('[!] Generated tasksheet - fill this in before running again')
-            exit(0)
-        
-        # Load data from file
-        f = open('tasks.json', 'r')
-        loaded_json = json.loads(f.read())
-        print('[!] Found `tasks.json`, analysing...')
-        f.close()          
-
-        # Iterate tasks
-        added = 0
-        for id, value in loaded_json.items():
-            description = value['descriptions'][0]
-            if description != '':
-                print('[+] Adding {} {}: "{}"'.format(value['name'], value['type'], description[:100]))
-                doe.add_activity(id, description, date)
-                del value['descriptions'][0]
-                added += 1
-        
-        # Close
-        if added < 1:
-            print('[-] Nothing was added, therefore lists are all clear. Stopping')
-            exit(0)
-
-        # Save new json
-        f = open('tasks.json', 'w')
-        f.write(json.dumps(loaded_json, indent=4, sort_keys=True))
-        f.close()
-
-def create_tasksheet(doe):
-    ''' Generate task sheet '''
-    output = {}
-    for activity in doe.get_activities():
-        output.update({
-            activity['id']: {
-                'type': activity['activitySection']['value'],
-                'name': activity['activityCategory']['name'],
-                'descriptions': [
-                    ''
-                ]
-            }
-        })
-    f = open('tasks.json', 'w')
-    f.write(json.dumps(output, indent=4, sort_keys=True))
-    f.close()
+def job(self, routine):
+    day = calendar.day_name[datetime.date.today().weekday()].lower()
+    if routine[day]:
+        doe = DOE()
+        if doe.login(config.EMAIL, config.PASSWORD):
+            doe.add_activity(2076106, routine[day])
 
 if __name__ == "__main__":
+    routine = {
+        'monday': "", 
+        'tuesday': "", 
+        'wednesday': "", 
+        'thursday': "", 
+        'friday': "", 
+        'saturday': "",
+        'saturday': ""
+    }
 
-    schedule.every().day.do(fill_activities)
+    schedule.every().day.at("01:00").do(self.job, routine)
+
     while True:
         schedule.run_pending()
-        sleep(10)
-
+        time.sleep(60) # wait one minute
