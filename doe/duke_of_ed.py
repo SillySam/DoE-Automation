@@ -1,11 +1,7 @@
 import requests
-import config
 import json
 import os
-
 import datetime
-import calendar
-import schedule
 
 class DOE:
     def __init__(self):
@@ -41,28 +37,4 @@ class DOE:
             'date': date,
             'activity': {'id': str(activity_id) }
         }
-        self.session.post(url, json=data)
-
-def job(self, routine):
-    day = calendar.day_name[datetime.date.today().weekday()].lower()
-    if routine[day]:
-        doe = DOE()
-        if doe.login(config.EMAIL, config.PASSWORD):
-            doe.add_activity(2076106, routine[day])
-
-if __name__ == "__main__":
-    routine = {
-        'monday': "", 
-        'tuesday': "", 
-        'wednesday': "", 
-        'thursday': "", 
-        'friday': "", 
-        'saturday': "",
-        'saturday': ""
-    }
-
-    schedule.every().day.at("01:00").do(self.job, routine)
-
-    while True:
-        schedule.run_pending()
-        time.sleep(60) # wait one minute
+        return self.session.post(url, json=data).text
