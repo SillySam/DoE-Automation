@@ -1,16 +1,6 @@
-# Duke of Edinburgh Award Automation
+# Duke of Edinburgh Award API
 
-This project allows activities to be written in a cluster, then with scheduling, entering these into the dashboard at the appropriate time.
+This project is base for automating log entries in the Duke of Edinburgh Award Program (www.onlinerecordbook.org).
+API is minimal, only containing the needed functionality for adding and reading activityies.
 
-#### Usage:
-
-1. Add email and password details into the `config.py` file.
-
-2. Run the program 'duke_of_ed.py' by using the command
-
-   ​	`python3 duke_of_ed.py`
-
-3. A `tasks.json` file will be generated. With this, fill in the 'description' list with as many weeks worth of 'stuff'
-
-4. Run the script again and leave running!
-
+This could be paired with the `schedule` library and a list of prewritten notes and left to run.
